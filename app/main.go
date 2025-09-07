@@ -43,6 +43,9 @@ func matchLine(line []byte, pattern string) (bool, error) {
 	if utf8.RuneCountInString(pattern) != 1 {
 		return false, fmt.Errorf("unsupported pattern: %q", pattern)
 	}
+	if pattern == "\\d" {
+		return bytes.ContainsAny(line, "0123456789"), nil
+	}
 
 	var ok bool
 
