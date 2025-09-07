@@ -40,8 +40,15 @@ func main() {
 }
 
 func matchLine(line []byte, pattern string) (bool, error) {
+
 	if pattern == "\\d" {
 		return bytes.ContainsAny(line, "0123456789"), nil
+	}
+	if pattern == "\\w" {
+		isAlphanum := func(r rune) bool {
+			return r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9'
+		}
+		return bytes.ContainsFunc(line, isAlphanum), nil
 	}
 	if utf8.RuneCountInString(pattern) != 1 {
 		return false, fmt.Errorf("unsupported pattern: %q", pattern)
