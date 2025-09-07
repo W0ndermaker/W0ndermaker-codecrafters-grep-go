@@ -50,6 +50,11 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		}
 		return bytes.ContainsFunc(line, isAlphanum), nil
 	}
+	if pattern[0] == '[' && pattern[len(pattern)-1] == ']' {
+		letters := pattern[1 : len(pattern)-1]
+		return bytes.ContainsAny(line, letters), nil
+	}
+
 	if utf8.RuneCountInString(pattern) != 1 {
 		return false, fmt.Errorf("unsupported pattern: %q", pattern)
 	}
