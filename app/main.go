@@ -59,7 +59,18 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		ok = bytes.ContainsFunc(line, isAlphanum)
 	} else if pattern[0] == '[' && pattern[len(pattern)-1] == ']' {
 		if pattern[1] == '^' {
-			ok = !bytes.ContainsAny(line, pattern[2:len(pattern)-1])
+			counter := 0
+			for _, v := range line {
+				for _, w := range pattern[2 : len(pattern)-1] {
+					if rune(v) == w {
+						counter++
+					}
+				}
+			}
+			if counter != len(line) {
+				return true, nil
+			}
+			return false, nil
 		} else {
 			ok = bytes.ContainsAny(line, pattern[1:len(pattern)-1])
 		}
