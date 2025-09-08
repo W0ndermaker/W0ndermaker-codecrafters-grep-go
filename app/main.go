@@ -67,6 +67,17 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		} else {
 			ok = true
 		}
+	} else if pattern[len(pattern)-1] == '$' {
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: regex pattern error: %v\n", err)
+		}
+		result := re.FindIndex(line)
+		if result == nil || result[1] != len(pattern)-1 {
+			ok = false
+		} else {
+			ok = true
+		}
 	} else {
 		ok = bytes.ContainsAny(line, pattern)
 	}
