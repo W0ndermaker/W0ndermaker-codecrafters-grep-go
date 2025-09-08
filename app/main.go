@@ -43,28 +43,27 @@ func main() {
 }
 
 func matchLine(line []byte, pattern string) (bool, error) {
-	/*
-		if pattern == "\\d" {
-			return bytes.ContainsAny(line, "0123456789"), nil
-		} else if pattern == "\\w" {
-			isAlphanum := func(r rune) bool {
-				return r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9' || r == '_'
+
+	if pattern == "\\d" {
+		return bytes.ContainsAny(line, "0123456789"), nil
+	} else if pattern == "\\w" {
+		isAlphanum := func(r rune) bool {
+			return r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9' || r == '_'
+		}
+		return bytes.ContainsFunc(line, isAlphanum), nil
+	} else if pattern[0] == '[' && pattern[len(pattern)-1] == ']' {
+		if pattern[1] == '^' {
+			for i := range pattern[2 : len(pattern)-1] {
+				if bytes.ContainsAny(line, string(pattern[i])) == false {
+					return true, nil
+				}
 			}
-			return bytes.ContainsFunc(line, isAlphanum), nil
-		} else if pattern[0] == '[' && pattern[len(pattern)-1] == ']' {
+			return false, nil
+
+		} else {
 			letters := pattern[1 : len(pattern)-1]
 			return bytes.ContainsAny(line, letters), nil
-		} */
-	if pattern[0] == '[' && pattern[1] == '^' && pattern[len(pattern)-1] == ']' {
-		var result bool
-		for i := 2; i <= len(pattern)-2; i++ {
-			result = bytes.ContainsRune(line, rune(pattern[i]))
-			//fmt.Println(string(line), string(pattern[i]), result)
-			if result == false {
-				return true, nil
-			}
 		}
-		return false, nil
 	}
 
 	if utf8.RuneCountInString(pattern) != 1 {
