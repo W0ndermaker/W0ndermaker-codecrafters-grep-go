@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -101,14 +102,17 @@ func matchLine(line []byte, pattern string) (bool, error) {
 }
 
 func checkPattern(p string) bool {
-	if bytes.ContainsAny(p, `^\[.*.\]$`) {
+	if result := regexp.MustCompile(`^\[.*.\]$`).MatchString(p); result {
 		return true
 	}
-	if bytes.ContainsAny(p, `\d`) {
+
+	if strings.Contains(p, `\d`) {
 		return true
 	}
-	if bytes.ContainsAny(p, `\w`) {
+
+	if strings.Contains(p, `\w`) {
 		return true
 	}
+
 	return false
 }
