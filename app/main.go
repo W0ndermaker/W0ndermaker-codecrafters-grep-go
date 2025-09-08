@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"unicode/utf8"
 )
 
@@ -43,7 +44,7 @@ func main() {
 }
 
 func matchLine(line []byte, pattern string) (bool, error) {
-	if utf8.RuneCountInString(pattern) != 1 {
+	if utf8.RuneCountInString(pattern) == 0 {
 		return false, fmt.Errorf("unsupported pattern: %q", pattern)
 	}
 
@@ -62,6 +63,15 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		} else {
 			ok = bytes.ContainsAny(line, pattern[1:len(pattern)-1])
 		}
+	} else {
+		//fmt.Println(pattern)
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(2)
+		}
+		ok = re.Match(line)
+
 	}
 
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
