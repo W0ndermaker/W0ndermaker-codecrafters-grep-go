@@ -62,7 +62,7 @@ func matchLine(line []byte, pattern string) (bool, error) {
 			fmt.Fprintf(os.Stderr, "error: regex pattern error: %v\n", err)
 		}
 		result := re.FindIndex(line)
-		if result == nil || result[0] == 0 {
+		if result == nil || result[0] != 0 {
 			ok = false
 		} else {
 			ok = true
