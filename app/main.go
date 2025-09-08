@@ -56,6 +56,16 @@ func matchLine(line []byte, pattern string) (bool, error) {
 			fmt.Fprintf(os.Stderr, "error: regex pattern error: %v\n", err)
 		}
 		ok = re.Match(line)
+	} else if pattern[0] == '^' {
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: regex pattern error: %v\n", err)
+		}
+		if re.FindIndex(line)[0] == 0 {
+			ok = true
+		} else {
+			ok = false
+		}
 	} else {
 		ok = bytes.ContainsAny(line, pattern)
 	}
@@ -63,41 +73,6 @@ func matchLine(line []byte, pattern string) (bool, error) {
 	fmt.Fprintln(os.Stderr, "Logs from your program will appear here!")
 
 	return ok, nil
-	/*
-		if pattern == "\\d" {
-			ok = bytes.ContainsAny(line, "0123456789")
-		} else if pattern == "\\w" {
-			isAlphanum := func(r rune) bool {
-				return r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9' || r == '_'
-			}
-			ok = bytes.ContainsFunc(line, isAlphanum)
-		} else if pattern[0] == '[' && pattern[len(pattern)-1] == ']' {
-			if pattern[1] == '^' {
-				counter := 0
-				for _, v := range line {
-					for _, w := range pattern[2 : len(pattern)-1] {
-						if rune(v) == w {
-							counter++
-						}
-					}
-				}
-				if counter != len(line) {
-					return true, nil
-				}
-				return false, nil
-			} else {
-				ok = bytes.ContainsAny(line, pattern[1:len(pattern)-1])
-			}
-		} else {
-			//fmt.Println(pattern)
-			re, err := regexp.Compile(pattern)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "error: %v\n", err)
-				os.Exit(2)
-			}
-			ok = re.Match(line)
-
-		}*/
 
 }
 
