@@ -54,7 +54,7 @@ func matchLine(line []byte, pattern string) (bool, error) {
 	} else if pattern[0] == '[' && pattern[1] == '^' && pattern[len(pattern)-1] == ']' {
 		result := false
 		for i := 2; i <= len(pattern)-2; i++ {
-			result = bytes.Contains(line, []byte{pattern[i]})
+			result = bytes.ContainsRune(line, rune(pattern[i]))
 			if result == false {
 				return true, nil
 			}
