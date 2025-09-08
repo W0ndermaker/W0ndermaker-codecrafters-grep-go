@@ -53,10 +53,18 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		return bytes.ContainsFunc(line, isAlphanum), nil
 	} else if pattern[0] == '[' && pattern[len(pattern)-1] == ']' {
 		if pattern[1] == '^' {
-			for i := range pattern[2 : len(pattern)-1] {
-				if bytes.Contains(line, []byte{pattern[i]}) == false {
-					return true, nil
+			counter := 0
+			for _, v := range line {
+				for _, w := range pattern[2 : len(pattern)-1] {
+					if rune(v) == w {
+						counter++
+					}
 				}
+			}
+			fmt.Println("line", line, len(line))
+			fmt.Println("counter:", counter)
+			if counter != len(line) {
+				return true, nil
 			}
 			return false, nil
 
