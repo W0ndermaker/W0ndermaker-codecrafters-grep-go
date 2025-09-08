@@ -61,10 +61,11 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: regex pattern error: %v\n", err)
 		}
-		if re.FindIndex(line)[0] == 0 {
-			ok = true
-		} else {
+		result := re.FindIndex(line)
+		if result == nil || result[0] == 0 {
 			ok = false
+		} else {
+			ok = true
 		}
 	} else {
 		ok = bytes.ContainsAny(line, pattern)
