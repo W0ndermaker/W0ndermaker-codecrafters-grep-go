@@ -73,7 +73,9 @@ func matchLine(line []byte, pattern string) (bool, error) {
 			fmt.Fprintf(os.Stderr, "error: regex pattern error: %v\n", err)
 		}
 		result := re.FindIndex(line)
-		if result == nil || result[1] != len(line)-1 {
+		//fmt.Println(result)
+		//fmt.Println(len(line) - 1)
+		if result == nil || result[1] != len(line) {
 			ok = false
 		} else {
 			ok = true
