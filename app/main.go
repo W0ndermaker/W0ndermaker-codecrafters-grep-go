@@ -83,7 +83,11 @@ func matchLine(line []byte, pattern string) (bool, error) {
 	}
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	fmt.Fprintln(os.Stderr, "Logs from your program will appear here!")
-
+	if ok {
+		fmt.Println("Correct")
+	} else {
+		fmt.Println("Incorrect")
+	}
 	return ok, nil
 
 }
